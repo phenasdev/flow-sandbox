@@ -9,4 +9,8 @@ describe("truncate", () => {
   it("replaces the final character with an ellipsis when input exceeds the maximum", () => {
     expect(truncate("abcdef", 4)).toBe("abc…");
   });
+
+  it("rejects a maximum length below one", () => {
+    expect(() => truncate("hello", 0)).toThrow(RangeError);
+  });
 });
