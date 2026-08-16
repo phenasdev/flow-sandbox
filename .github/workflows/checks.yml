@@ -1,0 +1,34 @@
+name: checks
+
+# What the CI-fix loop watches. Runs on every feature branch push and on the
+# pull request it opens against develop.
+on:
+  push:
+    branches: ["feature/**", "develop", "release/**"]
+  pull_request:
+    branches: [develop, "release/**", main]
+
+jobs:
+  verify:
+    name: typecheck + test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm test
+
+  slow:
+    name: slow job (observability)
+    runs-on: ubuntu-latest
+    steps:
+      # Deliberately slow so /flow's CI-waiting behaviour is observable rather
+      # than instantaneous. It is not a real check.
+      - run: sleep 120

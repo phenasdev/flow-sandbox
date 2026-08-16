@@ -1,0 +1,5 @@
+# pnpm 11 gates postinstall scripts here. Without an explicit allowance every
+# install exits 1 on esbuild's build step, which would fail every lane's
+# bootstrap before an agent ever runs.
+allowBuilds:
+  esbuild: true

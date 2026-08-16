@@ -1,0 +1,28 @@
+name: deploy
+
+# Runs after a merge. Success against `dev` is what reaps a lane; the release
+# path to production sits behind the change-request environment, whose required
+# reviewer holds the job in `waiting` until a human approves it.
+on:
+  push:
+    branches: [develop, "release/**", main]
+  workflow_dispatch:
+
+jobs:
+  dev:
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    environment:
+      name: dev
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "deployed ${{ github.sha }} to dev"
+
+  production:
+    if: startsWith(github.ref, 'refs/heads/release/') || github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: change-request
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "change request approved — deployed ${{ github.sha }}"
