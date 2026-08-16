@@ -5,4 +5,8 @@ describe("truncate", () => {
   it("returns input that fits within the maximum length unchanged", () => {
     expect(truncate("hello", 5)).toBe("hello");
   });
+
+  it("replaces the final character with an ellipsis when input exceeds the maximum", () => {
+    expect(truncate("abcdef", 4)).toBe("abc…");
+  });
 });
